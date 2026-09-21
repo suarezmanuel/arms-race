@@ -18,7 +18,7 @@
 follow https://thescienceofcode.com/raylib-vscode-c-cpp-debug/ 
 then do `make; make run`
 and make use of the included `.vscode` to debug the program, just make sure you have 
-in CLI `make`, `clang-format`
+in CLI `make`, `clang-format` (make sure it points to .clang-format)
 in VSCode extensions `clangd`, `Clang-Format`, `C/C++ Extension pack`
 also copy https://github.com/raysan5/raygui/blob/master/src/raygui.h into C:/raylib/include, and add `C:\raylib\lib` to path if you didnt in the first tutorial.
 i think thats it, though im not 100% sure
