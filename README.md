@@ -12,3 +12,13 @@
 
 1. player movement
 2. basic map loading, find a format
+
+## if you wanna run it
+
+follow https://thescienceofcode.com/raylib-vscode-c-cpp-debug/ 
+then do `make; make run`
+and make use of the included `.vscode` to debug the program, just make sure you have 
+in CLI `make`, `clang-format`
+in VSCode extensions `clangd`, `Clang-Format`, `C/C++ Extension pack`
+also copy https://github.com/raysan5/raygui/blob/master/src/raygui.h into C:/raylib/include, and add `C:\raylib\lib` to path if you didnt in the first tutorial.
+i think thats it, though im not 100% sure
