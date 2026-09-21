@@ -1,10 +1,14 @@
-# raylib VSCode C/C++
+# My Raylib game
 
-A cross-platform base project for raylib including debugging and syntax highlighting out-of-the-box.
+- 2D top down, player is a square
+- map is cod nuketown
+- Friendslop
+- Shooting
+    - guns have a conus that gets smaller the more you hold right click, if it gets too small you lose focus
+    - the conus gets a little bigger depending on the recoil each time you shoot
+    - recoil
+    - invincibility dash
+    - arms race
 
-* Linux.
-* Windows.
-* Mac.
-
-EN: [Installation guide](https://thescienceofcode.com/raylib-vscode-c-cpp-debug/).
-ES: [Guía de instalacion](https://thescienceofcode.com/es/raylib-vscode-c-cpp-debug/)
+1. player movement
+2. basic map loading, find a format
