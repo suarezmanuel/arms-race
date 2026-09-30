@@ -1,12 +1,13 @@
 #include "../include/structs.h"
 #include "stddef.h"
 #include "string.h"
+#include "../include/handle_input.h"
 
 
-const GameMode game_modes[GAME_MODE_COUNT] = {{FREEPLAY, "Free Play", KEY_ONE, METER},
-                                 {MAPEDIT, "Map Edit", KEY_TWO, METER},
-                                 {CONSOLE, "Console", KEY_GRAVE, METER},
-                                 {DEBUG, "Debug", KEY_THREE, METER}};
+const GameMode game_modes[GAME_MODE_COUNT] = {{FREEPLAY, "Free Play", KEY_ONE, METER, handle_input_freeplay},
+                                 {MAPEDIT, "Map Edit", KEY_TWO, METER, handle_input_freeplay},
+                                 {CONSOLE, "Console", KEY_GRAVE, METER, handle_input_console},
+                                 {DEBUG, "Debug", KEY_THREE, METER, handle_input_freeplay}};
 
 const char var_type_names[VAR_TYPE_COUNT][VAR_BUF_LEN] = {"vector2", "float"};
 VAR_TYPE var_type_names_mapping[VAR_TYPE_COUNT] = {VECTOR2, FLOAT};

@@ -35,11 +35,14 @@ typedef enum GameModeType {
     DEBUG,
 } GameModeType;
 
+typedef GameModeType HandleInputFunction(Map* map, Camera2D* camera, GameModeType initialMode);
+
 typedef struct GameMode {
     GameModeType type;
     char name[MAX_NAME_LEN];
     int toggle_key;
     float zoom;
+    HandleInputFunction* handle_input_function;
 } GameMode;
 
 typedef enum VAR_TYPE {
