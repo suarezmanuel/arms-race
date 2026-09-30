@@ -1,0 +1,43 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Build with Make",
+      "command": "make all",
+
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",       // Don't pop up the terminal unless there's an error
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false,
+        "close": true             // Auto-closes the terminal window when compilation finishes
+      },
+
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": {
+          "executable": "C:/msys64/usr/bin/bash.exe",
+          "args": ["--login", "-c"]
+        },
+        "env": {
+          "CHERE_INVOKING": "1",
+          "MSYSTEM": "MINGW64",
+          "MSYS2_PATH_TYPE": "inherit"
+        }
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+        "label": "Close Debug Terminal",
+        "type": "shell",
+        "command": "${command:workbench.action.terminal.kill}"
+    }
+  ]
+}
