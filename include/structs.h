@@ -6,11 +6,10 @@
 #include "consts.h"
 
 typedef struct Player {
-    Vector2 pos;
+    Rectangle rec;
     Vector2 vel;
     Vector2 acc;
     Vector2 SF;
-    Vector2 size;
     float drag_const;
     float speed;
     float m;
@@ -19,8 +18,7 @@ typedef struct Player {
 
 typedef struct Tile {
     Color color;
-    Vector2 pos;
-    Vector2 size;
+    Rectangle rec;
 } Tile;
 
 typedef struct Map {
@@ -68,9 +66,7 @@ extern CVar cvars [MAX_CVAR_COUNT];
 
 typedef struct GameState {
     Map map;
-    Camera2D camera;
     Player player;
-    float dt;
     GameMode mode;
 } GameState;
 

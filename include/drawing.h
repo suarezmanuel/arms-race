@@ -4,14 +4,8 @@
 #include "structs.h"
 #include "raylib/raymath.h"
 
-void draw_tile(Tile *tile);
+void draw_world(Camera2D* camera, GameState *game);
 
-void draw_map(Camera2D *camera, Map *map);
-
-void draw_grid(Camera2D *camera);
-
-void draw_player(Player *player);
-
-void draw_debug_info_player(Player *player);
+void draw_ui(GameState *game);
 
 #endif

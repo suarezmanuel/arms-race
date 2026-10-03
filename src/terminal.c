@@ -15,9 +15,6 @@ char cmd[MAX_CMD_LEN];
 int cmd_len = 0;
 
 
-// char cmds [MAX_LINES][MAX_CMD_LEN];
-// size_t cmd_count = 0;
-
 void execute_command(char* cmd) {
     void* values; 
 

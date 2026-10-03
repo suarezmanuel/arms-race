@@ -8,6 +8,6 @@
 GameModeType handle_input_freeplay(Map* map, Camera2D* camera, GameModeType initialMode);
 GameModeType handle_input_console(Map* map, Camera2D* camera, GameModeType initialMode);
 
-void handle_inputs(GameState *game);
+void handle_inputs(Camera2D *camera, GameState *game);
 
 #endif

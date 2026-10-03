@@ -3,16 +3,8 @@
 
 #include "structs.h"
 
-void generate_forces(Player *player, float dt);
+void generate_forces(Player *player);
 
-void apply_forces(Player *player, float dt);
-
-bool is_colliding(Player *player, Tile tile);
-
-int signum(float number);
-
-void separate_player(Player *player, Tile tile, float dt);
-
-void solve_collisions(Player *player, Map *map, float dt);
+void apply_forces(Player *player, Map* map);
 
 #endif

@@ -1,15 +1,15 @@
 #include "../include/drawing.h"
 #include "../include/helpers.h"
-#include "stdio.h"
+#include "../include/geometry.h"
+#include "../include/terminal.h"
 
-void draw_tile(Tile *tile) {
-    DrawRectangleV((Vector2){tile->pos.x, tile->pos.y},
-                   (Vector2){tile->size.x, tile->size.y}, tile->color);
+void draw_rec(Tile *tile) {
+    DrawRectangleV(REC_TL(tile->rec), REC_SIZE(tile->rec), tile->color);
 }
 
 void draw_map(Camera2D *camera, Map *map) {
     for (int i = 0; i < map->size; i++) {
-        draw_tile(&map->tiles[i]);
+        draw_rec(&map->tiles[i]);
     }
 }
 
@@ -36,13 +36,6 @@ void draw_grid(Camera2D *camera) {
     for (float i = hlines_start; i <= hlines_start + hlines_count; i += 1) {
         DrawLine(world_tl.x, i, world_br.x, i, GRAY);
     }
-}
-
-void draw_player(Player *player) {
-    draw_tile(&(Tile){
-        player->color,
-        (Vector2){snap_to_pixel(player->pos.x), snap_to_pixel(player->pos.y)},
-        player->size});
 }
 
 static void draw_vector(Vector2 start, Vector2 vec, Color color) {
@@ -75,16 +68,59 @@ static void draw_hover(Vector2 bottom, Player *player, float font_size) {
         pos.y += font_size;                                                    \
     } while (0)
 
-    DRAW_LINE(TextFormat("pos: %f %f", player->pos.x, player->pos.y), GRAY);
+    DRAW_LINE(TextFormat("pos: %f %f", player->rec.x, player->rec.y), GRAY);
     DRAW_LINE(TextFormat("vel_mag: %f", Vector2Length(player->vel)), BLACK);
     DRAW_LINE(TextFormat("acc_mag: %f", Vector2Length(player->acc)), ORANGE);
 #undef DRAW_LINE
 }
 
 void draw_debug_info_player(Player *player) {
-    Vector2 start = Vector2Add(player->pos, Vector2Scale(player->size, 0.5));
+    Vector2 start = REC_CENTER(player->rec);
     draw_vector(start, player->vel, BLACK);
     draw_vector(start, player->acc, ORANGE);
 
-    draw_hover(player->pos, player, 0.5);
+    draw_hover(REC_TL(player->rec), player, 0.5);
+}
+
+
+void draw_background(Camera2D* camera, GameState *game) {
+    ClearBackground(BOUNDS_COLOR);
+    DrawRectangle(-TILE_SIDE_LEN * MAX_MAP_TILE_WIDTH * 0.5f,
+                  -TILE_SIDE_LEN * MAX_MAP_TILE_HEIGHT * 0.5f,
+                  TILE_SIDE_LEN * MAX_MAP_TILE_WIDTH,
+                  TILE_SIDE_LEN * MAX_MAP_TILE_HEIGHT, RAYWHITE);
+    draw_grid(camera);
+}
+
+void draw_world_objects(Camera2D* camera, GameState *game) {
+    draw_map(camera, &game->map);
+    draw_rec(&(Tile){game->player.color, game->player.rec});
+}
+
+void draw_debug_info_map(Map* map) {
+    for (int i = 0; i < map->size; i++) {
+        Tile tile = map->tiles[i];
+        Rectangle rec = (Rectangle){tile.rec.x, tile.rec.y + PIXEL, tile.rec.width - PIXEL, tile.rec.height - PIXEL};
+        DrawRectangleLinesEx(rec, 0.1, YELLOW);     
+    }
+}
+
+void draw_debug_tools(GameState *game) {
+    draw_debug_info_player(&game->player);
+    draw_debug_info_map(&game->map);
+}
+
+void draw_ui(GameState *game) {
+    if (game->mode.type == CONSOLE) {
+        terminal_draw(game);
+    }
+}
+
+void draw_world(Camera2D* camera, GameState* game) {
+    draw_background(camera, game);
+    draw_world_objects(camera, game);
+
+    if (game->mode.type == DEBUG) {
+        draw_debug_tools(game);
+    }
 }

@@ -13,6 +13,13 @@
 1. player movement
 2. basic map loading, find a format
 
+it might make it very fun to add a camera like in League of Legeneds, that you have to move it with the mouse
+make it so the player can go through 2 block gaps easily
+the mouse should also interpolate
+install fake-virtual-space extension
+add a second camera on the texture,
+
+
 ## if you wanna run it
 
 ### MACOS 

@@ -1,21 +1,20 @@
 #include "../include/handle_input.h"
 #include "../include/terminal.h"
+#include "../include/helpers.h"
 
 GameModeType handle_input_freeplay(Map* map, Camera2D* camera, GameModeType initialMode) {
+    camera->zoom = game_modes[FREEPLAY].zoom;
     Vector2 mouse_world =
         GetScreenToWorld2D(GetMousePosition(), *camera);
-    Vector2 mouse_tile =
-        (Vector2){floor(mouse_world.x / TILE_SIDE_LEN) * TILE_SIDE_LEN,
-                    floor(mouse_world.y / TILE_SIDE_LEN) * TILE_SIDE_LEN};
+    Vector2 mouse_tile = snap_vector_to_grid(mouse_world);
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        append_tile(map,
-                    (Tile){BROWN, mouse_tile,
-                            (Vector2){TILE_SIDE_LEN, TILE_SIDE_LEN}});
+        append_tile(map, (Tile){BROWN, (Rectangle){mouse_tile.x, mouse_tile.y, TILE_SIDE_LEN, TILE_SIDE_LEN}});
     }
     return initialMode;
 }
 
 GameModeType handle_input_console(Map* map, Camera2D* camera, GameModeType initialMode) {
+    camera->zoom = game_modes[CONSOLE].zoom;
     // append all keys to text buffer
     terminal_handle_inputs();
 
@@ -25,11 +24,10 @@ GameModeType handle_input_console(Map* map, Camera2D* camera, GameModeType initi
     return initialMode;
 }
 
-void handle_inputs(GameState *game) {
-    Vector2 mouse_world = GetScreenToWorld2D(GetMousePosition(), game->camera);
-    game->camera.zoom = game->mode.zoom;
+void handle_inputs(Camera2D* camera, GameState *game) {
+    Vector2 mouse_world = GetScreenToWorld2D(GetMousePosition(), *camera);
 
-    GameModeType newType = game->mode.handle_input_function(&game->map, &game->camera, game->mode.type);
+    GameModeType newType = game->mode.handle_input_function(&game->map, camera, game->mode.type);
     game->mode = game_modes[newType];
 
     for (int i = 0; i < GAME_MODE_COUNT; i++) {

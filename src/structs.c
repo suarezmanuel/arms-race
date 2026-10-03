@@ -1,13 +1,16 @@
 #include "../include/structs.h"
+#include "../include/handle_input.h"
+#include "../include/geometry.h"
+#include "../include/cvars.h"
+#include "../include/geometry.h"
 #include "stddef.h"
 #include "string.h"
-#include "../include/handle_input.h"
 
-
-const GameMode game_modes[GAME_MODE_COUNT] = {{FREEPLAY, "Free Play", KEY_ONE, METER, handle_input_freeplay},
-                                 {MAPEDIT, "Map Edit", KEY_TWO, METER, handle_input_freeplay},
-                                 {CONSOLE, "Console", KEY_GRAVE, METER, handle_input_console},
-                                 {DEBUG, "Debug", KEY_THREE, METER, handle_input_freeplay}};
+const GameMode game_modes[GAME_MODE_COUNT] = {
+    {FREEPLAY, "Free Play", KEY_ONE, METER, handle_input_freeplay},
+    {MAPEDIT, "Map Edit", KEY_TWO, METER, handle_input_freeplay},
+    {CONSOLE, "Console", KEY_GRAVE, METER, handle_input_console},
+    {DEBUG, "Debug", KEY_THREE, METER, handle_input_freeplay}};
 
 const char var_type_names[VAR_TYPE_COUNT][VAR_BUF_LEN] = {"vector2", "float"};
 VAR_TYPE var_type_names_mapping[VAR_TYPE_COUNT] = {VECTOR2, FLOAT};
@@ -23,6 +26,7 @@ void register_cvar(VAR_TYPE type, const char *name, void *addr) {
     cvar->type = type;
     cvar->addr = addr;
     strncpy_s(cvar->name, VAR_BUF_LEN, TextToLower(name), VAR_BUF_LEN);
+    cvar->name[VAR_BUF_LEN-1]= '\0';
 }
 
 void set_cvar(const char *name, void *values) {
@@ -55,10 +59,9 @@ void set_cvar(const char *name, void *values) {
 
 void init_player(Player *player) {
     player->speed = SPEED;
-    player->size = (Vector2){2, 2};
     player->color = RED;
     player->m = 1; // kg
-    player->pos = (Vector2){SCREEN_WIDTH / (METER * 2.0f), SCREEN_HEIGHT / (METER * 2.0f)};
+    player->rec = (Rectangle){SCREEN_WIDTH / (METER * 2.0f), SCREEN_HEIGHT / (METER * 2.0f), 2, 2};
     player->drag_const = DRAG_CONST;
 }
 
@@ -67,8 +70,7 @@ void append_tile(Map *map, Tile tile) {
         return;
     }
     for (int i = 0; i < map->size; i++) {
-        if (Vector2Equals(map->tiles[i].size, tile.size) &&
-            Vector2Equals(map->tiles[i].pos, tile.pos)) {
+        if (REC_EQUAL(map->tiles[i].rec, tile.rec)) {
             return;
         }
     }
@@ -77,37 +79,21 @@ void append_tile(Map *map, Tile tile) {
 }
 
 void init_map(Map *map) {
-    append_tile(map,
-                (Tile){BROWN, (Vector2){10 * TILE_SIDE_LEN, 10 * TILE_SIDE_LEN},
-                       (Vector2){TILE_SIDE_LEN, TILE_SIDE_LEN}});
 
-    Vector2 tl = (Vector2){-MAX_MAP_TILE_WIDTH * TILE_SIDE_LEN * 0.5f,
-                           -MAX_MAP_TILE_HEIGHT * TILE_SIDE_LEN * 0.5f};
+    Vector2 tl = (Vector2){-MAX_MAP_TILE_WIDTH * 0.5f, -MAX_MAP_TILE_HEIGHT * 0.5f};
     Vector2 br = Vector2Scale(tl, -1);
 
-    append_tile(map, (Tile){BROWN, (Vector2){tl.x - TILE_SIDE_LEN, tl.y},
-                            (Vector2){TILE_SIDE_LEN,
-                                      MAX_MAP_TILE_HEIGHT * TILE_SIDE_LEN}});
-    append_tile(map, (Tile){BROWN, (Vector2){tl.x, tl.y - TILE_SIDE_LEN},
-                            (Vector2){MAX_MAP_TILE_WIDTH * TILE_SIDE_LEN,
-                                      TILE_SIDE_LEN}});
-    append_tile(map, (Tile){BROWN, (Vector2){tl.x, br.y},
-                            (Vector2){MAX_MAP_TILE_WIDTH * TILE_SIDE_LEN,
-                                      TILE_SIDE_LEN}});
-    append_tile(map, (Tile){BROWN, (Vector2){br.x, tl.y},
-                            (Vector2){TILE_SIDE_LEN,
-                                      MAX_MAP_TILE_HEIGHT * TILE_SIDE_LEN}});
+    append_tile(map, (Tile){BROWN, (Rectangle){tl.x - 1, tl.y, 1, MAX_MAP_TILE_HEIGHT}});
+    append_tile(map, (Tile){BROWN, (Rectangle){tl.x, tl.y - 1, MAX_MAP_TILE_WIDTH, 1}});
+    append_tile(map, (Tile){BROWN, (Rectangle){tl.x, br.y, MAX_MAP_TILE_WIDTH, 1}});
+    append_tile(map, (Tile){BROWN, (Rectangle){br.x, tl.y, 1, MAX_MAP_TILE_HEIGHT}});
 }
 
 void init_game(GameState *game) {
     init_map(&game->map);
     init_player(&game->player);
-    
-    game->dt = 1.0f / 60.0f;
-    game->camera.target = (Vector2){0, 0};
-    game->camera.offset = (Vector2){0, 0};
-    game->camera.zoom = 1.0f;
-    game->camera.rotation = 0.0f;
 
+    register_cvars(game);
+    
     game->mode = game_modes[FREEPLAY];
 }
