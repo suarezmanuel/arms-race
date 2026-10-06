@@ -73,7 +73,7 @@ void register_debug_text(const char *text, Vector2 pos, int font_size,
     dtext->color = color;
     dtext->font_size = font_size;
     dtext->pos = pos;
-    strncpy_s(dtext->text, MAX_TEXT_LEN, text, MAX_TEXT_LEN);
+    strncpy(dtext->text, text, MAX_TEXT_LEN);
     dtext->text[MAX_TEXT_LEN - 1] = '\0';
 }
 

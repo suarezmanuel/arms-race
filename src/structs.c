@@ -1,8 +1,7 @@
 #include "../include/structs.h"
-#include "../include/handle_input.h"
-#include "../include/geometry.h"
 #include "../include/cvars.h"
 #include "../include/geometry.h"
+#include "../include/handle_input.h"
 #include "stddef.h"
 #include "string.h"
 
@@ -25,8 +24,8 @@ void register_cvar(VAR_TYPE type, const char *name, void *addr) {
     CVar *cvar = &cvars[cvars_count++];
     cvar->type = type;
     cvar->addr = addr;
-    strncpy_s(cvar->name, VAR_BUF_LEN, TextToLower(name), VAR_BUF_LEN);
-    cvar->name[VAR_BUF_LEN-1]= '\0';
+    strncpy(cvar->name, TextToLower(name), VAR_BUF_LEN);
+    cvar->name[VAR_BUF_LEN - 1] = '\0';
 }
 
 void set_cvar(const char *name, void *values) {
@@ -80,13 +79,18 @@ void append_tile(Map *map, Tile tile) {
 
 void init_map(Map *map) {
 
-    Vector2 tl = (Vector2){-MAX_MAP_TILE_WIDTH * 0.5f, -MAX_MAP_TILE_HEIGHT * 0.5f};
+    Vector2 tl =
+        (Vector2){-MAX_MAP_TILE_WIDTH * 0.5f, -MAX_MAP_TILE_HEIGHT * 0.5f};
     Vector2 br = Vector2Scale(tl, -1);
 
-    append_tile(map, (Tile){BROWN, (Rectangle){tl.x - 1, tl.y, 1, MAX_MAP_TILE_HEIGHT}});
-    append_tile(map, (Tile){BROWN, (Rectangle){tl.x, tl.y - 1, MAX_MAP_TILE_WIDTH, 1}});
-    append_tile(map, (Tile){BROWN, (Rectangle){tl.x, br.y, MAX_MAP_TILE_WIDTH, 1}});
-    append_tile(map, (Tile){BROWN, (Rectangle){br.x, tl.y, 1, MAX_MAP_TILE_HEIGHT}});
+    append_tile(map, (Tile){BROWN, (Rectangle){tl.x - 1, tl.y, 1,
+                                               MAX_MAP_TILE_HEIGHT}});
+    append_tile(
+        map, (Tile){BROWN, (Rectangle){tl.x, tl.y - 1, MAX_MAP_TILE_WIDTH, 1}});
+    append_tile(map,
+                (Tile){BROWN, (Rectangle){tl.x, br.y, MAX_MAP_TILE_WIDTH, 1}});
+    append_tile(map,
+                (Tile){BROWN, (Rectangle){br.x, tl.y, 1, MAX_MAP_TILE_HEIGHT}});
 }
 
 void init_game(GameState *game) {
@@ -94,6 +98,6 @@ void init_game(GameState *game) {
     init_player(&game->player);
 
     register_cvars(game);
-    
+
     game->mode = game_modes[FREEPLAY];
 }

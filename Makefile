@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -std=c23 -pedantic -g -ggdb -Wswitch -Werror=switch
-LDFLAGS = -Iinclude -Llib -lraylib -lgdi32 -lwinmm
+LDFLAGS = -Iinclude -Llib -lraylib -framework CoreVideo -framework IOKit -framework Cocoa -framework OpenGL
+
 
 BUILD_DIR = build/win
 TARGET = $(BUILD_DIR)/main.exe

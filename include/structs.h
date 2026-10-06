@@ -1,6 +1,7 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+#include <stddef.h> 
 #include "raylib/raylib.h"
 #include "raylib/raymath.h"
 #include "consts.h"

@@ -6,7 +6,6 @@
 #include "../include/raylib/raylib.h"
 
 #include "../include/camera.h"
-#include "../include/consts.h"
 #include "../include/drawing.h"
 
 #include "../include/handle_input.h"
@@ -15,8 +14,12 @@
 
 
 int main() {
+    
     SetConfigFlags(FLAG_FULLSCREEN_MODE | FLAG_VSYNC_HINT);
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "raylib basic window");
+    InitWindow(0, 0, "raylib basic window");
+    SCREEN_WIDTH = GetScreenWidth();
+    SCREEN_HEIGHT = GetScreenHeight();
+    
     SetExitKey(KEY_DELETE);
     SetTargetFPS(60);
 
@@ -30,23 +33,26 @@ int main() {
 
         handle_inputs(&camera, &game);
         generate_forces(&game.player);
-        apply_forces(&game.player,  &game.map);
+        apply_forces(&game.player, &game.map);
         focus_camera(&camera, game.mode.type, &game.player);
 
         BeginDrawing();
         BeginTextureMode(buffer);
         BeginMode2D(camera);
-        
+
         draw_world(&camera, &game);
 
         EndMode2D();
-        
+
         draw_ui(&game);
 
         EndTextureMode();
-        DrawTexturePro(buffer.texture, (Rectangle){0, SCREEN_HEIGHT, SCREEN_WIDTH, -SCREEN_HEIGHT}, (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT}, (Vector2){0, 0}, 0, WHITE);
+        DrawTexturePro(
+            buffer.texture,
+            (Rectangle){0, SCREEN_HEIGHT, SCREEN_WIDTH, -SCREEN_HEIGHT},
+            (Rectangle){0, 0, SCREEN_WIDTH, SCREEN_HEIGHT}, (Vector2){0, 0}, 0,
+            WHITE);
         EndDrawing();
-
 
         game.player.SF = (Vector2){0, 0};
     }

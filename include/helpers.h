@@ -13,6 +13,8 @@
         arr[count++] = (type){__VA_ARGS__};         \
     } while (0)
 
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
 
 void str_to_lower(char* str);
 

@@ -1,6 +1,6 @@
 #include "../include/camera.h"
-#include "../include/helpers.h"
 #include "../include/geometry.h"
+#include "../include/helpers.h"
 
 void focus_on_map_tiling(Camera2D *camera) {
     // i want the blocks on -50, 50 to be visible

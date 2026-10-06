@@ -1,6 +1,6 @@
 #include "../include/drawing.h"
-#include "../include/helpers.h"
 #include "../include/geometry.h"
+#include "../include/helpers.h"
 #include "../include/terminal.h"
 
 void draw_rec(Tile *tile) {
@@ -39,7 +39,7 @@ void draw_grid(Camera2D *camera) {
 }
 
 static void draw_vector(Vector2 start, Vector2 vec, Color color) {
-    
+
     float vector_length = snap_to_pixel(Vector2Length(vec));
     float head_height = fmin(vector_length / 2, 0.4f);
     float head_width = head_height;
@@ -82,8 +82,7 @@ void draw_debug_info_player(Player *player) {
     draw_hover(REC_TL(player->rec), player, 0.5);
 }
 
-
-void draw_background(Camera2D* camera, GameState *game) {
+void draw_background(Camera2D *camera, GameState *game) {
     ClearBackground(BOUNDS_COLOR);
     DrawRectangle(-TILE_SIDE_LEN * MAX_MAP_TILE_WIDTH * 0.5f,
                   -TILE_SIDE_LEN * MAX_MAP_TILE_HEIGHT * 0.5f,
@@ -92,16 +91,18 @@ void draw_background(Camera2D* camera, GameState *game) {
     draw_grid(camera);
 }
 
-void draw_world_objects(Camera2D* camera, GameState *game) {
+void draw_world_objects(Camera2D *camera, GameState *game) {
     draw_map(camera, &game->map);
     draw_rec(&(Tile){game->player.color, game->player.rec});
 }
 
-void draw_debug_info_map(Map* map) {
+void draw_debug_info_map(Map *map) {
     for (int i = 0; i < map->size; i++) {
         Tile tile = map->tiles[i];
-        Rectangle rec = (Rectangle){tile.rec.x, tile.rec.y + PIXEL, tile.rec.width - PIXEL, tile.rec.height - PIXEL};
-        DrawRectangleLinesEx(rec, 0.1, YELLOW);     
+        Rectangle rec =
+            (Rectangle){tile.rec.x, tile.rec.y + PIXEL, tile.rec.width - PIXEL,
+                        tile.rec.height - PIXEL};
+        DrawRectangleLinesEx(rec, 0.1, YELLOW);
     }
 }
 
@@ -116,7 +117,7 @@ void draw_ui(GameState *game) {
     }
 }
 
-void draw_world(Camera2D* camera, GameState* game) {
+void draw_world(Camera2D *camera, GameState *game) {
     draw_background(camera, game);
     draw_world_objects(camera, game);
 
