@@ -1,9 +1,9 @@
 #include "../include/terminal.h"
 #include "../include/consts.h"
 #include "../include/helpers.h"
-#include "math.h"
-#include "raylib/raygui.h"
-#include "raylib/raylib.h"
+#include "../include/raylib/raygui.h"
+#include "../include/raylib/raylib.h"
+#include "math.h"    
 #include "stdio.h"
 #include "string.h"
 

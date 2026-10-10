@@ -1,10 +1,18 @@
 cmake_minimum_required(VERSION 3.16)
 project(MyRaylibProject C)
 
+if(CMAKE_BUILD_TYPE STREQUAL "")
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# Always emit useful debug info for the VS Code debugger and GDB.
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -g3")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -O0 -g3")
 
 # Fix for the CMP0135 warning in your logs
 if(POLICY CMP0135)
@@ -18,6 +26,9 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/raysan5/raylib.git
     GIT_TAG        6.0 # Or use a specific release tag like 5.0, 5.5, etc.
 )
+
+include(CTest)
+enable_testing()
 
 # Build raylib as part of the project (uses correct compiler tools automatically)
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)

@@ -2,17 +2,15 @@
 #include "stddef.h"
 
 #define RAYGUI_IMPLEMENTATION
-#include "raylib/raygui.h"
-#include "raylib/raylib.h"
+#include "../include/raylib/raygui.h"
+#include "../include/raylib/raylib.h"
 
 #include "../include/camera.h"
 #include "../include/drawing.h"
 
-#include "../include/geometry.h"
 #include "../include/handle_input.h"
 #include "../include/physics.h"
 #include "../include/structs.h"
-
 #include "../include/debug.h"
 
 int main() {
@@ -53,7 +51,6 @@ int main() {
         cameraTexture.offset = Vector2Add(camera.offset, loss);
         cameraTexture.rotation = 0.0f;
         cameraTexture.zoom = 1.0f;
-        // RegisterDebugCircle();
 
         printf("%f %f\n", loss.x, loss.y);
 
@@ -67,6 +64,9 @@ int main() {
                        (Rectangle){a.x, a.y, SCREEN_WIDTH / cameraTexture.zoom,
                                    SCREEN_HEIGHT / cameraTexture.zoom},
                        (Vector2){0, 0}, 0, WHITE);
+
+        DebugDraw(&cameraTexture);
+
         EndMode2D();
         EndDrawing();
 

@@ -2,6 +2,7 @@
 #include "../include/geometry.h"
 #include "../include/helpers.h"
 #include "../include/terminal.h"
+#include "../include/debug.h"
 
 void DrawRec(Tile *tile) {
     DrawRectangleV(REC_TL(tile->rec), REC_SIZE(tile->rec), tile->color);
@@ -38,7 +39,10 @@ static void DrawWorldGrid(Camera2D *camera) {
     }
 }
 
-static void DrawVector(Vector2 start, Vector2 vec, Color color) {
+void DrawVector(Camera2D *camera, Vector2 start, Vector2 vec, Color color, bool to_world) {
+
+    start = VEC_TO_WORLD_IF(start, to_world, camera);
+    vec = VEC_TO_WORLD_IF(vec, to_world, camera);
 
     float vector_length = SnapToPixel(Vector2Length(vec));
     float head_height = fmin(vector_length / 2, 0.4f);
@@ -64,7 +68,7 @@ void DrawHover(Vector2 bottom, Player *player, float font_size) {
 
 #define DRAW_LINE(text, color)                                                 \
     do {                                                                       \
-        DrawTextEx(font, (text), pos, font_size, 0.05f, (color));              \
+        RegisterDebugText((text), pos, font_size, (color), INSTANT, true);     \
         pos.y += font_size;                                                    \
     } while (0)
 
@@ -74,10 +78,10 @@ void DrawHover(Vector2 bottom, Player *player, float font_size) {
 #undef DRAW_LINE
 }
 
-void DrawDebugInfoPlayer(Player *player) {
+void DrawDebugInfoPlayer(Camera2D *camera, Player *player) {
     Vector2 start = REC_CENTER(player->rec);
-    DrawVector(start, player->vel, BLACK);
-    DrawVector(start, player->acc, ORANGE);
+    DrawVector(camera, start, player->vel, BLACK, false);
+    DrawVector(camera, start, player->acc, ORANGE, false);
 
     DrawHover(REC_TL(player->rec), player, 0.5);
 }
@@ -106,8 +110,8 @@ void DrawDebugInfoMap(Map *map) {
     }
 }
 
-void DrawDebugTools(GameState *game) {
-    DrawDebugInfoPlayer(&game->player);
+void DrawDebugTools(Camera2D *camera, GameState *game) {
+    DrawDebugInfoPlayer(camera, &game->player);
     DrawDebugInfoMap(&game->map);
 }
 
@@ -122,6 +126,6 @@ void DrawWorld(Camera2D *camera, GameState *game) {
     DrawWorldObjects(camera, game);
 
     if (game->mode.type == DEBUG) {
-        DrawDebugTools(game);
+        DrawDebugTools(camera, game);
     }
 }

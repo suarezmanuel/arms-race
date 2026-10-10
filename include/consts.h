@@ -18,4 +18,5 @@ extern int SCREEN_HEIGHT;
 #define DRAG_CONST 4
 #define SPEED 70
 #define SLOP 1 / (100 * METER)
+#define INSTANT 0.001f
 #endif
