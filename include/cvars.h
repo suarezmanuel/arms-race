@@ -3,6 +3,6 @@
 
 #include "../include/structs.h"
 
-void register_cvars(GameState *game);
+void RegisterCvars(GameState *game);
 
 #endif

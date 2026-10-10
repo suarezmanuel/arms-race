@@ -3,14 +3,14 @@
 
 #include "raylib/raylib.h"
 
-void register_debug_circle(Vector2 center, float radius, Color color, float duration);
+void DrawDebugCircle(Vector2 center, float radius, Color color, float duration, bool to_world);
 
-void register_debug_line(Vector2 start, Vector2 end, Color color, float duration);
+void DrawDebugLine(Vector2 start, Vector2 end, Color color, float duration, bool to_world);
 
-void register_debug_rect(Rectangle rec, Color color, float duration);
+void DrawDebugRect(Rectangle rec, Color color, float duration, bool to_world);
 
-void register_debug_text(const char* text, Vector2 pos, int font_size, Color color, float duration);
+void DrawDebugText(const char* text, Vector2 pos, int font_size, Color color, float duration, bool to_world);
 
-void debug_step();
+void DebugStep();
 
 #endif

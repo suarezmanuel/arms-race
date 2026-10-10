@@ -3,7 +3,7 @@
 
 #include "../include/structs.h"
 
-void terminal_handle_inputs();
-void terminal_draw(GameState* game);
+void TerminalHandleInputs();
+void TerminalDraw(GameState* game);
 
 #endif

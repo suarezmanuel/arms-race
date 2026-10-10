@@ -16,15 +16,15 @@
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
-void str_to_lower(char* str);
+void StrToLower(char* str);
 
-float snap_to_pixel(float p);
+float SnapToPixel(float p);
 
-float snap_to_grid(float num);
+float SnapToGrid(float num);
 
-Vector2 snap_vector_to_pixel(Vector2 vec);
+Vector2 SnapVectorToPixel(Vector2 vec);
 
-Vector2 snap_vector_to_grid(Vector2 vec);
+Vector2 SnapVectorToGrid(Vector2 vec);
 
 
 #endif

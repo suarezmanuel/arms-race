@@ -3,8 +3,8 @@
 
 #include "structs.h"
 
-void generate_forces(Player *player);
+void GenerateForces(Player *player);
 
-void apply_forces(Player *player, Map* map);
+void ApplyForces(Player *player, Map* map);
 
 #endif

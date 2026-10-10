@@ -11,7 +11,6 @@
 #define REC_TL(rec)       (Vector2){rec.x, rec.y}
 #define REC_SIZE(rec)     (Vector2){rec.width, rec.height}
 #define REC_EQUAL(rec1,rec2) (rec1.x == rec2.x && rec1.y == rec2.y && rec1.width == rec2.width && rec1.height == rec2.height)
-
-#include "raylib/raylib.h"
+#define REC_MOVE(rec, offset) (Rectangle){rec.x + offset.x, rec.y + offset.y, rec.width, rec.height}
 
 #endif

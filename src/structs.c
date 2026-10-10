@@ -6,10 +6,10 @@
 #include "string.h"
 
 const GameMode game_modes[GAME_MODE_COUNT] = {
-    {FREEPLAY, "Free Play", KEY_ONE, METER, handle_input_freeplay},
-    {MAPEDIT, "Map Edit", KEY_TWO, METER, handle_input_freeplay},
-    {CONSOLE, "Console", KEY_GRAVE, METER, handle_input_console},
-    {DEBUG, "Debug", KEY_THREE, METER, handle_input_freeplay}};
+    {FREEPLAY, "Free Play", KEY_ONE, METER, HandleInputFreeplay},
+    {MAPEDIT, "Map Edit", KEY_TWO, METER, HandleInputFreeplay},
+    {CONSOLE, "Console", KEY_GRAVE, METER, HandleInputConsole},
+    {DEBUG, "Debug", KEY_THREE, METER, HandleInputFreeplay}};
 
 const char var_type_names[VAR_TYPE_COUNT][VAR_BUF_LEN] = {"vector2", "float"};
 VAR_TYPE var_type_names_mapping[VAR_TYPE_COUNT] = {VECTOR2, FLOAT};
@@ -17,7 +17,7 @@ VAR_TYPE var_type_names_mapping[VAR_TYPE_COUNT] = {VECTOR2, FLOAT};
 CVar cvars[MAX_CVAR_COUNT] = {0};
 size_t cvars_count = 0;
 
-void register_cvar(VAR_TYPE type, const char *name, void *addr) {
+void RegisterCvar(VAR_TYPE type, const char *name, void *addr) {
     if (cvars_count == MAX_CVAR_COUNT) {
         return;
     }
@@ -28,7 +28,7 @@ void register_cvar(VAR_TYPE type, const char *name, void *addr) {
     cvar->name[VAR_BUF_LEN - 1] = '\0';
 }
 
-void set_cvar(const char *name, void *values) {
+void SetCvar(const char *name, void *values) {
     CVar selected;
     for (size_t i = 0; i < cvars_count; i++) {
         if (!strcmp(cvars[i].name, name)) {
@@ -56,7 +56,7 @@ void set_cvar(const char *name, void *values) {
     }
 }
 
-void init_player(Player *player) {
+void InitPlayer(Player *player) {
     player->speed = SPEED;
     player->color = RED;
     player->m = 1; // kg
@@ -64,7 +64,7 @@ void init_player(Player *player) {
     player->drag_const = DRAG_CONST;
 }
 
-void append_tile(Map *map, Tile tile) {
+void AppendTile(Map *map, Tile tile) {
     if (map->size == MAX_MAP_SIZE) {
         return;
     }
@@ -77,27 +77,27 @@ void append_tile(Map *map, Tile tile) {
     map->size++;
 }
 
-void init_map(Map *map) {
+void InitMap(Map *map) {
 
     Vector2 tl =
         (Vector2){-MAX_MAP_TILE_WIDTH * 0.5f, -MAX_MAP_TILE_HEIGHT * 0.5f};
     Vector2 br = Vector2Scale(tl, -1);
 
-    append_tile(map, (Tile){BROWN, (Rectangle){tl.x - 1, tl.y, 1,
+    AppendTile(map, (Tile){BROWN, (Rectangle){tl.x - 1, tl.y, 1,
                                                MAX_MAP_TILE_HEIGHT}});
-    append_tile(
+    AppendTile(
         map, (Tile){BROWN, (Rectangle){tl.x, tl.y - 1, MAX_MAP_TILE_WIDTH, 1}});
-    append_tile(map,
+    AppendTile(map,
                 (Tile){BROWN, (Rectangle){tl.x, br.y, MAX_MAP_TILE_WIDTH, 1}});
-    append_tile(map,
+    AppendTile(map,
                 (Tile){BROWN, (Rectangle){br.x, tl.y, 1, MAX_MAP_TILE_HEIGHT}});
 }
 
-void init_game(GameState *game) {
-    init_map(&game->map);
-    init_player(&game->player);
+void InitGame(GameState *game) {
+    InitMap(&game->map);
+    InitPlayer(&game->player);
 
-    register_cvars(game);
+    RegisterCvars(game);
 
     game->mode = game_modes[FREEPLAY];
 }

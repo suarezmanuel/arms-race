@@ -1,9 +1,9 @@
 #include "../include/terminal.h"
 #include "../include/consts.h"
 #include "../include/helpers.h"
-#include "../include/raylib/raygui.h"
-#include "../include/raylib/raylib.h"
 #include "math.h"
+#include "raylib/raygui.h"
+#include "raylib/raylib.h"
 #include "stdio.h"
 #include "string.h"
 
@@ -14,7 +14,7 @@
 char cmd[MAX_CMD_LEN];
 int cmd_len = 0;
 
-void execute_command(char *cmd) {
+void ExecuteCommand(char *cmd) {
     void *values;
 
     char type_str[VAR_BUF_LEN];
@@ -24,9 +24,9 @@ void execute_command(char *cmd) {
            "%" TOSTRING(VAR_BUF_LEN) "s = ", "%" TOSTRING(VAR_BUF_LEN) "[^\n]",
            type_str, name, values_str);
 
-    str_to_lower(type_str);
-    str_to_lower(name);
-    str_to_lower(values_str);
+    StrToLower(type_str);
+    StrToLower(name);
+    StrToLower(values_str);
 
     VAR_TYPE type;
     for (int i = 0; i < VAR_TYPE_COUNT; i++) {
@@ -40,13 +40,13 @@ void execute_command(char *cmd) {
     case FLOAT: {
         float value;
         sscanf(values_str, "%f", &value);
-        set_cvar(name, &value);
+        SetCvar(name, &value);
         break;
     }
     case VECTOR2: {
         float values[2];
         sscanf(values_str, "%f %f", &values[0], &values[1]);
-        set_cvar(name, values);
+        SetCvar(name, values);
         break;
     }
     case VAR_TYPE_COUNT: {
@@ -55,12 +55,12 @@ void execute_command(char *cmd) {
     }
 }
 
-void terminal_handle_inputs() {
+void TerminalHandleInputs() {
     int k;
     while ((k = GetKeyPressed()) && k != 0) {
         char c = GetCharPressed();
         if (k == KEY_ENTER) {
-            execute_command(cmd);
+            ExecuteCommand(cmd);
             cmd_len = 0;
             cmd[0] = '\0';
             continue;
@@ -83,7 +83,7 @@ void terminal_handle_inputs() {
     }
 }
 
-void terminal_draw(GameState *game) {
+void TerminalDraw(GameState *game) {
     int text_height = MeasureTextEx(GetFontDefault(), "A", FONT_SIZE, 5).y;
     Color terminal_color = (Color){BLACK.r, BLACK.g, BLACK.b, 220};
     DrawRectangle(0, 0, SCREEN_WIDTH, 2 * text_height, terminal_color);

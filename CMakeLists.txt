@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(MyRaylibProject C)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
@@ -24,6 +26,7 @@ FetchContent_MakeAvailable(raylib)
 FILE(GLOB SRCFILES src/*.c)
 # Define your executable
 add_executable(${PROJECT_NAME} ${SRCFILES})
+target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 # Link raylib and system dependencies based on the OS
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)

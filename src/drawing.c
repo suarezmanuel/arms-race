@@ -3,17 +3,17 @@
 #include "../include/helpers.h"
 #include "../include/terminal.h"
 
-void draw_rec(Tile *tile) {
+void DrawRec(Tile *tile) {
     DrawRectangleV(REC_TL(tile->rec), REC_SIZE(tile->rec), tile->color);
 }
 
-void draw_map(Camera2D *camera, Map *map) {
+void DrawMap(Camera2D *camera, Map *map) {
     for (int i = 0; i < map->size; i++) {
-        draw_rec(&map->tiles[i]);
+        DrawRec(&map->tiles[i]);
     }
 }
 
-void draw_grid(Camera2D *camera) {
+static void DrawWorldGrid(Camera2D *camera) {
     Vector2 world_tl = Vector2Max(
         GetScreenToWorld2D((Vector2){-1 * METER, -1 * METER}, *camera),
         ((Vector2){-MAX_MAP_TILE_WIDTH * 0.5f, -MAX_MAP_TILE_HEIGHT * 0.5f}));
@@ -38,9 +38,9 @@ void draw_grid(Camera2D *camera) {
     }
 }
 
-static void draw_vector(Vector2 start, Vector2 vec, Color color) {
+static void DrawVector(Vector2 start, Vector2 vec, Color color) {
 
-    float vector_length = snap_to_pixel(Vector2Length(vec));
+    float vector_length = SnapToPixel(Vector2Length(vec));
     float head_height = fmin(vector_length / 2, 0.4f);
     float head_width = head_height;
     float line_width = head_width * 0.33f;
@@ -55,11 +55,11 @@ static void draw_vector(Vector2 start, Vector2 vec, Color color) {
                  Vector2Add(base, half_width), color);
 }
 
-static void draw_hover(Vector2 bottom, Player *player, float font_size) {
+void DrawHover(Vector2 bottom, Player *player, float font_size) {
 
     int count = 3;
     Vector2 pos =
-        snap_vector_to_pixel((Vector2){bottom.x, bottom.y - font_size * count});
+        SnapVectorToPixel((Vector2){bottom.x, bottom.y - font_size * count});
     Font font = GetFontDefault();
 
 #define DRAW_LINE(text, color)                                                 \
@@ -74,29 +74,29 @@ static void draw_hover(Vector2 bottom, Player *player, float font_size) {
 #undef DRAW_LINE
 }
 
-void draw_debug_info_player(Player *player) {
+void DrawDebugInfoPlayer(Player *player) {
     Vector2 start = REC_CENTER(player->rec);
-    draw_vector(start, player->vel, BLACK);
-    draw_vector(start, player->acc, ORANGE);
+    DrawVector(start, player->vel, BLACK);
+    DrawVector(start, player->acc, ORANGE);
 
-    draw_hover(REC_TL(player->rec), player, 0.5);
+    DrawHover(REC_TL(player->rec), player, 0.5);
 }
 
-void draw_background(Camera2D *camera, GameState *game) {
+void DrawBackground(Camera2D *camera, GameState *game) {
     ClearBackground(BOUNDS_COLOR);
     DrawRectangle(-TILE_SIDE_LEN * MAX_MAP_TILE_WIDTH * 0.5f,
                   -TILE_SIDE_LEN * MAX_MAP_TILE_HEIGHT * 0.5f,
                   TILE_SIDE_LEN * MAX_MAP_TILE_WIDTH,
                   TILE_SIDE_LEN * MAX_MAP_TILE_HEIGHT, RAYWHITE);
-    draw_grid(camera);
+    DrawWorldGrid(camera);
 }
 
-void draw_world_objects(Camera2D *camera, GameState *game) {
-    draw_map(camera, &game->map);
-    draw_rec(&(Tile){game->player.color, game->player.rec});
+void DrawWorldObjects(Camera2D *camera, GameState *game) {
+    DrawMap(camera, &game->map);
+    DrawRec(&(Tile){game->player.color, game->player.rec});
 }
 
-void draw_debug_info_map(Map *map) {
+void DrawDebugInfoMap(Map *map) {
     for (int i = 0; i < map->size; i++) {
         Tile tile = map->tiles[i];
         Rectangle rec =
@@ -106,22 +106,22 @@ void draw_debug_info_map(Map *map) {
     }
 }
 
-void draw_debug_tools(GameState *game) {
-    draw_debug_info_player(&game->player);
-    draw_debug_info_map(&game->map);
+void DrawDebugTools(GameState *game) {
+    DrawDebugInfoPlayer(&game->player);
+    DrawDebugInfoMap(&game->map);
 }
 
-void draw_ui(GameState *game) {
+void DrawUi(GameState *game) {
     if (game->mode.type == CONSOLE) {
-        terminal_draw(game);
+        TerminalDraw(game);
     }
 }
 
-void draw_world(Camera2D *camera, GameState *game) {
-    draw_background(camera, game);
-    draw_world_objects(camera, game);
+void DrawWorld(Camera2D *camera, GameState *game) {
+    DrawBackground(camera, game);
+    DrawWorldObjects(camera, game);
 
     if (game->mode.type == DEBUG) {
-        draw_debug_tools(game);
+        DrawDebugTools(game);
     }
 }

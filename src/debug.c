@@ -1,5 +1,7 @@
 #include "../include/debug.h"
 #include "../include/helpers.h"
+#include "raylib.h"
+#include "raymath.h"
 #include "string.h"
 #define MAX_DEBUG_CIRCLES 1024
 #define MAX_DEBUG_LINES 1024
@@ -12,6 +14,7 @@ typedef struct DebugCircle {
     float radius;
     Color color;
     float duration;
+    bool to_world;
 } DebugCircle;
 
 typedef struct DebugLine {
@@ -19,12 +22,14 @@ typedef struct DebugLine {
     Vector2 end;
     Color color;
     float duration;
+    bool to_world;
 } DebugLine;
 
 typedef struct DebugRectangle {
     Rectangle rec;
     Color color;
     float duration;
+    bool to_world;
 } DebugRectangle;
 
 typedef struct DebugText {
@@ -33,6 +38,7 @@ typedef struct DebugText {
     int font_size;
     Color color;
     float duration;
+    bool to_world;
 } DebugText;
 
 static DebugCircle debug_circles[MAX_DEBUG_CIRCLES];
@@ -47,25 +53,25 @@ static int debug_rectangles_count = 0;
 static DebugText debug_texts[MAX_DEBUG_TEXTS];
 static int debug_texts_count = 0;
 
-void register_debug_circle(Vector2 center, float radius, Color color,
-                           float duration) {
+void DrawDebugCircle(Vector2 center, float radius, Color color, float duration,
+                     bool to_world) {
     INSERT_TO_ARRAY(debug_circles, debug_circles_count, MAX_DEBUG_CIRCLES,
                     DebugCircle, center, radius, color, duration);
 }
 
-void register_debug_line(Vector2 start, Vector2 end, Color color,
-                         float duration) {
+void DrawDebugLine(Vector2 start, Vector2 end, Color color, float duration,
+                   bool to_world) {
     INSERT_TO_ARRAY(debug_lines, debug_lines_count, MAX_DEBUG_LINES, DebugLine,
                     start, end, color, duration);
 }
 
-void register_debug_rect(Rectangle rec, Color color, float duration) {
+void DrawDebugRect(Rectangle rec, Color color, float duration, bool to_world) {
     INSERT_TO_ARRAY(debug_rectangles, debug_rectangles_count,
                     MAX_DEBUG_RECTANGLES, DebugRectangle, rec, color, duration);
 }
 
-void register_debug_text(const char *text, Vector2 pos, int font_size,
-                         Color color, float duration) {
+void RegisterDebugText(const char *text, Vector2 pos, int font_size,
+                       Color color, float duration, bool to_world) {
     if (debug_texts_count == MAX_DEBUG_TEXTS) {
         return;
     }
@@ -95,21 +101,27 @@ void register_debug_text(const char *text, Vector2 pos, int font_size,
         }                                                                      \
     } while (0)
 
-void debug_draw() {
+void DebugDraw(Camera2D *camera) {
+
+#define VEC_TO_WORLD_IF(vec, to_world)                                         \
+    ((to_world) ? GetScreenToWorld2D(vec, *camera) : (vec))
 
     for (size_t i = 0; i < debug_circles_count; i++) {
         DebugCircle circle = debug_circles[i];
-        DrawCircleV(circle.center, circle.radius, circle.color);
+        DrawCircleV(VEC_TO_WORLD_IF(circle.center, circle.to_world),
+                    circle.radius, circle.color);
     }
 
     for (size_t i = 0; i < debug_lines_count; i++) {
         DebugLine line = debug_lines[i];
-        DrawLineV(line.start, line.end, line.color);
+        DrawLineV(VEC_TO_WORLD_IF(line.start, line.to_world),
+                  VEC_TO_WORLD_IF(line.end, line.to_world), line.color);
     }
 
     for (size_t i = 0; i < debug_rectangles_count; i++) {
-        DebugRectangle rec = debug_rectangles[i];
-        DrawRectangleRec(rec.rec, rec.color);
+        DebugRectangle drec = debug_rectangles[i];
+        DrawRectangleRec((Rectangle){VEC_TO_WORLD_IF(drec.re, drec.to_world)},
+                         drec.color);
     }
 
     for (size_t i = 0; i < debug_texts_count; i++) {

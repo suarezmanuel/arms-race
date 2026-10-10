@@ -4,8 +4,8 @@
 #include "structs.h"
 #include "raylib/raymath.h"
 
-void draw_world(Camera2D* camera, GameState *game);
+void DrawWorld(Camera2D* camera, GameState *game);
 
-void draw_ui(GameState *game);
+void DrawUi(GameState *game);
 
 #endif

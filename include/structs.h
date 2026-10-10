@@ -71,16 +71,16 @@ typedef struct GameState {
     GameMode mode;
 } GameState;
 
-void append_tile(Map *map, Tile tile);
+void AppendTile(Map *map, Tile tile);
 
-void init_player(Player *player);
+void InitPlayer(Player *player);
 
-void init_map(Map *map);
+void InitMap(Map *map);
 
-void init_game(GameState *game);
+void InitGame(GameState *game);
 
-void register_cvar(VAR_TYPE type, const char* name, void* addr);
+void RegisterCvar(VAR_TYPE type, const char* name, void* addr);
 
-void set_cvar(const char* name, void* values);
+void SetCvar(const char* name, void* values);
 
 #endif

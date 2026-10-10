@@ -1,3 +1,2 @@
 CompileFlags:
-  Add: 
-    - -Iinclude
+  CompilationDatabase: build
